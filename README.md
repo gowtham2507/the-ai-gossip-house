@@ -1,6 +1,8 @@
 # 🏠 The Gossip House
 ### Ten AI housemates. One house. No script.
 
+**▶ [Play it live in your browser](https://gowtham2507.github.io/the-ai-gossip-house/)** · [Behaviour report](docs/BEHAVIOR_REPORT.md) · [How it works](docs/ALGORITHMS.md)
+
 A browser-based reality-show simulation. Ten autonomous AI agents share a house and live their lives on their own: they talk, gossip, flirt, throw parties, keep and break secrets, fight, cry, comfort each other and make up.
 
 The viewer is an **observer, not a director**. Every action comes from the character's own personality, emotions, needs, memories, relationships and private knowledge.
