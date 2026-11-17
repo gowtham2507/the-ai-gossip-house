@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI House — The Living Party</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#141026;--panel:#1d1838;--panel2:#262049;--line:#36305e;--ink:#f3f0ff;--mute:#a9a2cc;--acc:#ff7eb6;--acc2:#ffd166;--good:#5ee6a8;--bad:#ff6b6b;--blue:#7cc4ff}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:Nunito,system-ui,sans-serif;font-size:14px;overflow:hidden}
+button{font:inherit;color:inherit;cursor:pointer}
+#app{display:grid;grid-template-rows:auto 1fr;height:100%}
+header{display:flex;align-items:center;gap:10px;padding:8px 12px;background:linear-gradient(90deg,#211a44,#1a1536);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.logo{font-family:Fredoka,sans-serif;font-weight:700;font-size:19px;letter-spacing:.3px;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.logo .dot{width:10px;height:10px;border-radius:50%;background:var(--acc);box-shadow:0 0 10px var(--acc);animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.35}}
+.logo small{font-family:Nunito;font-weight:600;color:var(--mute);font-size:12px}
+.clock{font-family:Fredoka;font-size:16px;background:var(--panel2);padding:4px 10px;border-radius:9px;border:1px solid var(--line);min-width:118px;text-align:center}
+.grp{display:flex;gap:4px;background:var(--panel2);padding:3px;border-radius:10px;border:1px solid var(--line)}
+.btn{background:transparent;border:0;padding:5px 10px;border-radius:7px;font-weight:700;font-size:13px}
+.btn:hover{background:rgba(255,255,255,.08)}
+.btn.on{background:var(--acc);color:#2a0f1f}
+.btn.solid{background:var(--panel2);border:1px solid var(--line)}
+.btn.prim{background:var(--acc);color:#2a0f1f}
+.btn.gold{background:var(--acc2);color:#2b2200}
+.pill{display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:var(--panel2);border:1px solid var(--line);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
+.pill .led{width:8px;height:8px;border-radius:50%;background:#888}
+.pill.claude .led{background:var(--good);box-shadow:0 0 8px var(--good)}
+.spacer{flex:1}
+main{display:grid;grid-template-columns:1fr 380px;min-height:0}
+#stageWrap{position:relative;min-width:0;min-height:0;overflow:hidden}
+#stage{display:block;touch-action:none;cursor:grab}
+#stage.drag{cursor:grabbing}
+.ov{position:absolute;pointer-events:none}
+#toasts{left:10px;top:10px;display:flex;flex-direction:column;gap:6px;max-width:min(420px,60%)}
+.toast{pointer-events:auto;cursor:pointer;background:rgba(20,16,40,.86);border:1px solid var(--line);border-left:4px solid var(--acc);padding:7px 10px;border-radius:10px;font-size:13px;animation:tin .35s ease;backdrop-filter:blur(4px)}
+.toast b{color:var(--acc2)}
+@keyframes tin{from{opacity:0;transform:translateY(-6px)}}
+#camctl{right:10px;bottom:10px;display:flex;gap:6px;pointer-events:auto}
+#camctl button{background:rgba(20,16,40,.85);border:1px solid var(--line);border-radius:9px;padding:6px 10px;font-weight:800}
+#followChip{left:50%;transform:translateX(-50%);bottom:12px;pointer-events:auto;display:none;background:var(--acc2);color:#2b2200;border-radius:999px;padding:6px 14px;font-weight:800;cursor:pointer}
+#hint{left:10px;bottom:10px;font-size:12px;color:var(--mute);background:rgba(20,16,40,.7);padding:5px 9px;border-radius:8px}
+aside{background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+.tabs{display:flex;gap:2px;padding:6px;border-bottom:1px solid var(--line)}
+.tab{flex:1;background:transparent;border:0;padding:8px 4px;border-radius:8px;font-weight:800;color:var(--mute);font-size:13px}
+.tab.on{background:var(--panel2);color:var(--ink)}
+.tab .n{display:inline-block;min-width:18px;padding:0 5px;border-radius:9px;background:var(--acc);color:#2a0f1f;font-size:11px;margin-left:4px}
+.pane{flex:1;overflow:auto;padding:10px 12px;display:none}
+.pane.on{display:block}
+.pane::-webkit-scrollbar{width:8px}.pane::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px}
+h3{font-family:Fredoka;font-weight:600;font-size:14px;margin:14px 0 6px;color:var(--acc2);letter-spacing:.3px}
+.grid10{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.card{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:8px;display:flex;gap:8px;align-items:center;cursor:pointer;transition:.15s}
+.card:hover{border-color:var(--acc)}
+.card canvas{width:44px;height:52px;flex:none;background:rgba(255,255,255,.04);border-radius:8px}
+.card .nm{font-weight:800}.card .sub{font-size:11.5px;color:var(--mute);line-height:1.25}
+.ahead{display:flex;gap:10px;align-items:center}
+.ahead canvas{width:72px;height:84px;background:radial-gradient(circle at 50% 40%,rgba(255,255,255,.12),transparent 70%);border-radius:12px;flex:none}
+.ahead .nm{font-family:Fredoka;font-size:21px;font-weight:700}
+.tagrow{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}
+.tag{font-size:11px;font-weight:800;padding:2px 7px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid var(--line)}
+.kv{display:grid;grid-template-columns:92px 1fr;gap:3px 8px;font-size:13px;margin-top:8px}
+.kv div:nth-child(odd){color:var(--mute);font-weight:700}
+.why{margin-top:8px;padding:8px 10px;border-radius:10px;background:rgba(124,196,255,.08);border:1px solid rgba(124,196,255,.25);font-size:13px}
+.bars{display:grid;grid-template-columns:96px 1fr 26px;gap:3px 8px;align-items:center;font-size:12px}
+.bar{height:7px;border-radius:9px;background:rgba(255,255,255,.07);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:9px}
+.rel{display:grid;grid-template-columns:70px 1fr auto;gap:6px;align-items:center;padding:5px 0;border-bottom:1px dashed var(--line);font-size:12px;cursor:pointer}
+.rel .mini{display:grid;grid-template-columns:repeat(4,1fr);gap:3px}
+.rel .mini span{height:5px;border-radius:5px;background:rgba(255,255,255,.07);position:relative;overflow:hidden}
+.rel .mini span i{position:absolute;left:0;top:0;bottom:0}
+.rlab{font-size:10.5px;font-weight:800;padding:1px 6px;border-radius:9px;background:rgba(255,255,255,.08)}
+.list{display:flex;flex-direction:column;gap:5px}
+.item{font-size:12.5px;padding:6px 8px;border-radius:9px;background:rgba(255,255,255,.04);border:1px solid transparent;line-height:1.35}
+.item .t{color:var(--mute);font-size:11px;font-weight:700;margin-right:4px}
+.item.hot{border-color:rgba(255,126,182,.35);background:rgba(255,126,182,.07)}
+.item.click{cursor:pointer}.item.click:hover{border-color:var(--line)}
+.lock{color:var(--acc2)}
+.ev{display:flex;gap:8px;align-items:flex-start;padding:7px 8px;border-radius:9px;cursor:pointer;font-size:13px;line-height:1.35}
+.ev:hover{background:rgba(255,255,255,.05)}
+.ev .ic{flex:none;width:22px;text-align:center}
+.ev .t{color:var(--mute);font-size:11px;font-weight:700;display:block}
+.filters{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px}
+.filters button{font-size:11.5px;padding:3px 8px;border-radius:999px;border:1px solid var(--line);background:transparent;font-weight:800;color:var(--mute)}
+.filters button.on{background:var(--panel2);color:var(--ink);border-color:var(--acc)}
+.conv{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:8px 10px;margin-bottom:8px}
+.conv .hd{display:flex;justify-content:space-between;gap:6px;font-size:12px;color:var(--mute);font-weight:700;cursor:pointer}
+.conv .hd b{color:var(--ink)}
+.line{font-size:13px;margin-top:5px;line-height:1.35}
+.line .s{font-weight:800}
+.line .meta{font-size:10.5px;color:var(--mute);margin-left:4px}
+.line.w{font-style:italic;opacity:.9}
+.line .th{display:block;font-size:11.5px;color:var(--blue);margin-left:10px}
+.badge{font-size:10px;font-weight:800;padding:1px 6px;border-radius:8px;background:rgba(255,255,255,.1)}
+.badge.private{background:rgba(124,196,255,.2);color:var(--blue)}.badge.hostile{background:rgba(255,107,107,.2);color:var(--bad)}.badge.claude{background:rgba(94,230,168,.18);color:var(--good)}
+.note{font-size:12px;color:var(--mute);background:rgba(255,255,255,.04);border-radius:10px;padding:8px 10px;line-height:1.4;margin-top:6px}
+.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:6px 0}
+label.f{font-size:12px;color:var(--mute);font-weight:700;display:flex;gap:6px;align-items:center}
+select,input[type=number],textarea{background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:5px 7px;font:inherit;font-size:12.5px}
+textarea{width:100%;min-height:60px}
+.stat{display:grid;grid-template-columns:1fr auto;gap:2px 10px;font-size:12.5px}
+.stat div:nth-child(odd){color:var(--mute)}
+#modal{position:fixed;inset:0;background:rgba(8,6,20,.72);display:flex;align-items:center;justify-content:center;z-index:20}
+#modal .box{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px;max-width:520px;width:calc(100% - 30px);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+#modal h2{font-family:Fredoka;margin:0 0 6px;font-size:24px}
+#modal p{color:var(--mute);line-height:1.5;margin:6px 0}
+.cast{display:flex;gap:4px;justify-content:center;margin:12px 0}
+.cast canvas{width:40px;height:48px}
+@media (max-width:900px){ main{grid-template-columns:1fr;grid-template-rows:58% 42%} aside{border-left:0;border-top:1px solid var(--line)} header{gap:6px} .logo small{display:none} #hint{display:none}}
+</style>
+</head>
+<body>
+<div id="app">
+<header>
+  <div class="logo"><span class="dot"></span>AI HOUSE <small>The Living Party</small></div>
+  <div class="clock" id="clock">Day 1 · 08:00</div>
+  <div class="grp"><button class="btn" id="bPause" title="Pause / resume (space)">⏸</button><button class="btn on" data-sp="1">1×</button><button class="btn" data-sp="2">2×</button><button class="btn" data-sp="5">5×</button></div>
+  <div class="pill" id="llmPill" title="Dialogue engine"><span class="led"></span><span id="llmTxt">Offline engine</span></div>
+  <button class="btn prim" id="bConnect">✨ Use Claude for dialogue</button>
+  <div class="spacer"></div>
+  <div class="grp"><button class="btn" data-ev="party" title="Start a party">🎉</button><button class="btn" data-ev="pizza" title="Pizza delivery">🍕</button><button class="btn" data-ev="game" title="Suggest game night">🎲</button><button class="btn" data-ev="storm" title="Storm">⛈</button><button class="btn" data-ev="outage" title="Power outage">⚡</button></div>
+</header>
+<main>
+  <div id="stageWrap">
+    <canvas id="stage"></canvas>
+    <div class="ov" id="toasts"></div>
+    <div class="ov" id="followChip">Following — click to stop</div>
+    <div class="ov" id="hint">Drag to pan · scroll to zoom · click a housemate · double-click a room</div>
+    <div class="ov" id="camctl"><button id="zIn">＋</button><button id="zOut">－</button><button id="zFit">⤢ House</button></div>
+  </div>
+  <aside>
+    <div class="tabs"><button class="tab on" data-tab="agent">Housemate</button><button class="tab" data-tab="feed">Feed</button><button class="tab" data-tab="talks">Talks <span class="n" id="talkN">0</span></button><button class="tab" data-tab="house">House</button></div>
+    <div class="pane on" id="p-agent"></div>
+    <div class="pane" id="p-feed"></div>
+    <div class="pane" id="p-talks"></div>
+    <div class="pane" id="p-house"></div>
+  </aside>
+</main>
+</div>
+<div id="modal" style="display:none"></div>
+<script>
+/*__JS__*/
+</script>
+</body>
+</html>
