@@ -16,36 +16,37 @@
 ## 2. Results
 
 ### Multi-seed statistics (offline dialogue engine)
-10 seeds x 4 days | avg runtime 829 ms | avg couples 0.10 | avg claims 191
+10 seeds x 4 days | avg runtime 820 ms | avg couples 0.10 | avg claims 210
 | Event type | Avg per run | Runs where it occurred |
 |---|---|---|
-| talk | 227.8 | 10/10 |
-| gossip | 102.9 | 10/10 |
-| relationship | 19.4 | 10/10 |
-| conflict | 11.1 | 10/10 |
-| social | 8.6 | 10/10 |
-| rumor | 8.1 | 10/10 |
-| reconcile | 6.8 | 10/10 |
-| party | 5.4 | 9/10 |
-| leak | 2.3 | 4/10 |
-| secret | 2.0 | 8/10 |
-| jealousy | 1.8 | 6/10 |
-| overheard | 1.3 | 4/10 |
-| mood | 0.6 | 4/10 |
-| game | 0.5 | 2/10 |
-| confession | 0.5 | 2/10 |
-| alliance | 0.5 | 4/10 |
-| crush | 0.3 | 3/10 |
-| cry | 0.1 | 1/10 |
+| talk | 210.4 | 10/10 |
+| gossip | 103.7 | 10/10 |
+| relationship | 22.1 | 10/10 |
+| social | 20.4 | 10/10 |
+| conflict | 10.3 | 10/10 |
+| rumor | 10.2 | 10/10 |
+| reconcile | 7.4 | 10/10 |
+| party | 5.3 | 9/10 |
+| jealousy | 4.1 | 9/10 |
+| secret | 2.1 | 9/10 |
+| mood | 1.4 | 7/10 |
+| overheard | 0.7 | 4/10 |
+| leak | 0.5 | 3/10 |
+| cry | 0.4 | 2/10 |
+| comfort | 0.3 | 2/10 |
+| game | 0.3 | 2/10 |
+| alliance | 0.2 | 2/10 |
+| romance | 0.1 | 1/10 |
+| crush | 0.1 | 1/10 |
 
 **Reading the table:**
 - Everyday social life (talking, gossip, relationship changes) happens in every run.
-- Conflicts and reconciliations also happen in every run, about 11 conflicts and 7 reconciliations per run on average.
+- Conflicts and reconciliations also happen in every run, see the table for the averages.
 - Rarer events (secret leaks, Truth or Dare confessions, alliances, crushes being discovered, crying, couples) appear in some runs and not others. They depend on each run's history, which is the intended behaviour for an unscripted simulation.
 
 ### Browser tests
-- `shot.py`: **no console errors or page errors.** Screenshots are in `docs/screenshots/`.
-- `llm.py` (mocked Claude, 15 s at 2×): 24 calls, **18 lines marked as Claude's, 3 invalid replies caught and retried**, 0 fallbacks, status "Claude connected", no errors.
+- `shot.py`: **no console errors or page errors.** Images are in `docs/images/`.
+- `llm.py` (mocked Claude, 15 s at 2×): 17 calls, **14 lines marked as Claude's, 1 invalid reply caught and retried**, 0 fallbacks, status "Claude connected", no errors.
 
 ### Behaviour checks
 - **Crying and comfort:** Luna cried after a sad event, then Noah came over to comfort her ("Noah comforted Luna") and she stopped crying.
@@ -56,6 +57,7 @@
 ## 3. Tuning changes made during testing
 | Problem found | Fix |
 |---|---|
+| Confrontation lines quoted the whole rumor ("I heard about saying 'Zara said…' behind my back") | The cause of a confrontation is now written naturally ("what you said about me behind my back") |
 | Max's own jokes were spreading as gossip, and Mia kept re-sending the same exaggerated rumor | Agents can't gossip about claims they started themselves. Each rumor is exaggerated at most once per agent. |
 | Secrets leaked too fast (even discreet Ethan spread them) | The gossip score is now scaled by the gossip trait, with a much bigger penalty for discretion and for promises made. |
 | Too little drama (no confiding, no games) | Added a confide path based on trust, a "tell" urge after learning juicy news, and spontaneous Truth or Dare at parties. |

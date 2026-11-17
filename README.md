@@ -1,10 +1,28 @@
-# 🏠 AI House — The Living Party
+# 🏠 The Gossip House
+### Ten AI housemates. One house. No script.
 
-A browser-based social simulation. Ten AI housemates share a house and live their lives on their own: they talk, gossip, flirt, throw parties, fight, cry, comfort each other and make up. None of it is scripted.
+A browser-based reality-show simulation. Ten autonomous AI agents share a house and live their lives on their own: they talk, gossip, flirt, throw parties, keep and break secrets, fight, cry, comfort each other and make up.
 
 The viewer is an **observer, not a director**. Every action comes from the character's own personality, emotions, needs, memories, relationships and private knowledge.
 
-![The house](docs/screenshots/s1_house.png)
+![Cast](docs/images/00_cast.png)
+
+![The house](docs/images/01_day_overview.png)
+
+## 📖 What happened when we let them loose
+
+> On day 4 Noah whispered his crush on Ivy to Luna in a crowded kitchen. Five people overheard. Mia passed it on within five minutes, and Noah overheard *her*. He blamed Luna (she was innocent), broke down crying, and **Luna was the one who came to comfort him**. Half an hour later he confronted her on the balcony: *"I told you that in confidence!"* She said *"That wasn't me,"* and he chose to believe her. Their friendship survived, but his trust in her didn't fully recover.
+
+| | |
+|---|---|
+| ![](docs/images/05_noah_confides_in_luna.png) | ![](docs/images/06_mia_spreads_the_secret.png) |
+| ![](docs/images/07_noah_cries.png) | ![](docs/images/09_noah_confronts_luna.png) |
+
+**Read the full behaviour report → [docs/BEHAVIOR_REPORT.md](docs/BEHAVIOR_REPORT.md)**: the story above, a profile of every character, the time each spent on each activity, relationship heatmaps, how each secret spread, and the weaknesses we found.
+
+| | |
+|---|---|
+| ![](docs/images/chart_behaviour_profile.png) | ![](docs/images/chart_relationships.png) |
 
 ## Features
 
@@ -67,7 +85,7 @@ src/
   shell.html       HTML/CSS shell
 dist/index.html    built single-file app
 tests/             headless simulation tests + browser tests (Playwright)
-docs/              architecture, algorithms, test report, screenshots
+docs/              architecture, algorithms, behaviour report, test report, images
 build.py           build script
 ```
 
@@ -75,6 +93,7 @@ build.py           build script
 
 - [Architecture](docs/ARCHITECTURE.md): the layered design and how the parts fit together
 - [Algorithms & methods](docs/ALGORITHMS.md): the formulas and algorithms behind each system
+- [Behaviour report](docs/BEHAVIOR_REPORT.md): how the agents actually behaved, with images and charts
 - [Test report](docs/TEST_REPORT.md): the test methods, multi-seed statistics and known limitations
 
 ## Running the tests
@@ -82,6 +101,8 @@ build.py           build script
 ```bash
 node tests/run.js 3 42        # 3 simulated days, seed 42: event counts, sample conversations
 node tests/stats.js 4 10      # 10 seeds × 4 days: aggregate statistics
+node tests/behavior.js 11 5 > /tmp/b11.json && python3 tests/charts.py /tmp/b11.json   # behaviour study + charts
+python3 tests/scenes.py       # re-render the story scenes into docs/images
 pip install playwright && playwright install chromium
 python3 tests/shot.py         # loads the app headless, captures screenshots, reports JS errors
 python3 tests/llm.py          # tests the Claude path with a mocked sample() incl. invalid JSON

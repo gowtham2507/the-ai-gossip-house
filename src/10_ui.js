@@ -211,7 +211,7 @@ function initInput(){
 }
 function showIntro(){
   const m=document.getElementById('modal'); m.style.display='flex';
-  m.innerHTML=`<div class="box"><h2>Welcome to AI House 🏠</h2>
+  m.innerHTML=`<div class="box"><h2>Welcome to The Gossip House 🏠</h2>
   <p>Ten housemates share a house. Each has their own personality, feelings, needs, secrets, memories and opinions of everyone else. Nobody runs on a script: they decide what to do, who to talk to, what to reveal and who to forgive.</p>
   <div class="cast" id="introCast"></div>
   <p>You're the viewer. Watch, zoom in, follow someone, or open their head to see why they did what they did. For real AI dialogue, connect Claude — it uses your Claude account, no API key needed.</p>

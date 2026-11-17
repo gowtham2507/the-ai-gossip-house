@@ -1,4 +1,5 @@
 import asyncio
+import os; os.makedirs('tests/output',exist_ok=True)
 from playwright.async_api import async_playwright
 FAKE = """
 window.__calls=0;
@@ -28,7 +29,7 @@ async def main():
         r = await pg.evaluate("""(()=>{ const ls=S.convs.concat(S.ended).flatMap(c=>c.lines); return {calls:window.__calls, claude:ls.filter(l=>l.src==='claude').length, fallback:ls.filter(l=>l.src==='fallback').length, offline:ls.filter(l=>l.src==='offline').length, invalid:LLM.invalid, status:LLM.status, sample:ls.filter(l=>l.src==='claude').slice(0,3).map(l=>l.text)}; })()""")
         print(r)
         await pg.evaluate("setTab('talks')"); await pg.wait_for_timeout(500)
-        await pg.screenshot(path='docs/screenshots/s7_llm.png')
+        await pg.screenshot(path='tests/output/s7_llm.png')
         print(errs or 'no errors')
         await b.close()
 asyncio.run(main())

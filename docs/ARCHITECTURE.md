@@ -1,6 +1,6 @@
 # Architecture
 
-AI House uses a **five-layer hybrid architecture**. The LLM is never called for movement or animation. It is used only for meaningful dialogue and the social choices made inside a conversation.
+The Gossip House uses a **five-layer hybrid architecture**. The LLM is never called for movement or animation. It is used only for meaningful dialogue and the social choices made inside a conversation.
 
 ```
 ┌──────────────────────────────────────────────────────────────┐

@@ -38,7 +38,7 @@ function distortClaim(c){
   const map={crush:`${X} is completely obsessed with ${Y}`,flirt:`${X} and ${Y} were all over each other`,feeling:`${X} is totally falling apart`,fight:`${X} and ${Y} basically screamed at each other`,crying:`${X} was sobbing for, like, an hour`,couple:`${X} and ${Y} are basically moving in together`};
   const content=map[c.kind]||`${c.content}, and honestly it's way worse than it sounds`;
   const id=makeClaim({about:c.about,target:c.target,kind:c.kind,content,secret:c.secret,owner:c.owner,juicy:Math.min(10,c.juicy+2),truth:false,parent:c.id});
-  S.claims[id].origin=c.origin;
+  S.claims[id].origin=c.origin; S.claims[id].public=c.public;
   return id;
 }
 function jokePlan(sp,c,os){
@@ -166,11 +166,11 @@ const BANK={
  caution:['Don\'t spread that unless you\'re sure.','Careful. That could really hurt someone.','Maybe keep that to yourself.','Are you sure that\'s even true?'],
  confide:['Can I tell you something? {F}.','I\'ve never said this out loud, but {F}.','Please don\'t tell anyone... {F}.'],
  support:['Thank you for telling me. Your secret\'s safe.','That means a lot that you told me.','I won\'t tell a soul. I promise.','I\'m really glad you said something.'],
- confront:['We need to talk about {CAUSE}.','Did you really think I wouldn\'t find out about {CAUSE}?','Why are you {CAUSE}?','I heard about {CAUSE}. Seriously?'],
+ confront:['We need to talk about {CAUSE}.','Did you really think I wouldn\'t find out about {CAUSE}?','I heard about {CAUSE}. Seriously?','Can we talk? It\'s about {CAUSE}.'],
  confront_leak:['How could you tell people my secret?','I trusted you, and you told people?','I told you that in confidence!','Who else did you tell?'],
  deny:['I never said anything, I swear.','What? That wasn\'t me.','I didn\'t tell anyone. I promise.','You\'ve got the wrong person.'],
  deflect:['It was a joke! You\'re taking it too seriously.','Relax, it\'s not a big deal.','Come on, everyone knows I\'m kidding.'],
- apologize:['I\'m sorry. I mean it.','I messed up. I\'m really sorry about {CAUSE}.','Look... I shouldn\'t have done that. I\'m sorry.','I\'ve been thinking about it. I owe you an apology.'],
+ apologize:['I\'m sorry. I mean it.','I messed up. I\'m really sorry.','Look... I shouldn\'t have done that. I\'m sorry.','I\'ve been thinking about it. I owe you an apology.'],
  forgive:['Okay. I forgive you.','Thank you for saying that. We\'re good.','...Fine. Just don\'t do it again.','I appreciate it. Let\'s move on.'],
  refuse:['Sorry doesn\'t fix it.','I\'m not ready to forgive you.','You always say that.','No. Not this time.'],
  insult:['You always do this.','Wow. You\'re unbelievable.','You know what? You\'re so fake.','You only care about yourself.','Grow up.','You always say that when you hurt someone.'],

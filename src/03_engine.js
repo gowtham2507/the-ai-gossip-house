@@ -184,7 +184,7 @@ function reactToClaim(a,c,sourceId,o,isNew){
     feel(a,{anger:sting*(a.p.temper/70),embarrassment:sting*0.6,sadness:sting*(a.p.neuroticism/120),trust:-5},`hearing that ${nm(c.origin)} talked about them behind their back`);
     relChange(a,c.origin,{resentment:sting,trust:-sting*0.6,friendship:-sting*0.4},`heard ${nm(c.origin)} talked about them behind their back`);
     addMemory(a,`${nm(c.origin)} talked about me behind my back: "${c.content}". I'm not okay with that.`,8,[c.origin],'hurt');
-    if(a.emotions.anger>35 || a.p.temper>60) addIntention(a,{type:'confront',target:c.origin,claimId:c.id,cause:`saying "${c.content}" behind my back`,urg:40+a.emotions.anger*0.6+a.p.temper*0.3});
+    if(a.emotions.anger>35 || a.p.temper>60) addIntention(a,{type:'confront',target:c.origin,claimId:c.id,cause:`what you said about me behind my back`,urg:40+a.emotions.anger*0.6+a.p.temper*0.3});
     logEvent('rumor',`${a.name} found out what ${nm(c.origin)} said about them.`,[a.id,c.origin],3);
   }
   // 3) jealousy: someone I'm into is involved with someone else

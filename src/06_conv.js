@@ -50,6 +50,7 @@ function applyTurn(c,sp,plan,res){
   for(const cid of (res.factIds||[])){
     const claim=S.claims[cid]; if(!claim) continue;
     const confiding = res.intent==='confide' || (res.intent==='game_answer' && claim.owner===sp.id);
+    const root=claim.parent&&S.claims[claim.parent]; if(root&&root.public) claim.public=true;
     if(res.intent==='game_answer' && claim.owner===sp.id){ claim.public=true; logEvent('confession',`🎲 ${sp.name} confessed during Truth or Dare: "${claim.content}".`,[sp.id,...c.participants],5,{convId:c.id}); }
     else if(res.intent==='confide'){ for(const h of hearers) if(h.direct && !claim.confidedTo.includes(h.b.id)) claim.confidedTo.push(h.b.id); logEvent('secret',`${sp.name} confided a secret to ${hearers.filter(h=>h.direct).map(h=>h.b.name).join(', ')}.`,[sp.id,...hearers.filter(h=>h.direct).map(h=>h.b.id)],3,{convId:c.id}); }
     else if(claim.secret && !claim.public && claim.owner!==sp.id){
@@ -140,7 +141,7 @@ function applyEffects(c,sp,res,hearers,plan){
       break; }
     case 'confide': for(const b of direct){ relChange(b,sp.id,{trust:5,friendship:4,familiarity:4},'confided in them'); relChange(sp,b.id,{trust:4,friendship:3},'opened up to them',false); } feel(sp,{loneliness:-12,stress:-6,happiness:4}); break;
     case 'support': if(to){ feel(to,{sadness:-8,loneliness:-8,affection:6},`${sp.name}'s support`); relChange(to,sp.id,{trust:5,friendship:5},'was supportive'); } break;
-    case 'confront': if(to){ feel(to,{anger:8,fear:6,embarrassment:isPublic?10:4,stress:8},`${sp.name} confronted them`); relChange(to,sp.id,{resentment:5},'was confronted',false); dropIntention(sp,'confront',to.id); if(!c.flags.confrontLogged){ c.flags.confrontLogged=1; logEvent('conflict',`${sp.name} confronted ${to.name}${plan.cause?` about ${plan.cause}`:''}.`,[sp.id,to.id],4,{convId:c.id}); } } break;
+    case 'confront': if(to){ feel(to,{anger:8,fear:6,embarrassment:isPublic?10:4,stress:8},`${sp.name} confronted them`); relChange(to,sp.id,{resentment:5},'was confronted',false); dropIntention(sp,'confront',to.id); if(!c.flags.confrontLogged){ c.flags.confrontLogged=1; logEvent('conflict',`${sp.name} confronted ${to.name} ${plan.leak?'about leaking their secret':plan.claimId?'about what they said behind their back':'about what happened'}.`,[sp.id,to.id],4,{convId:c.id}); } } break;
     case 'deny': if(to){ c.flags.denied=true; } break;
     case 'deflect': if(to){ feel(to,{anger:5},`${sp.name} brushed it off`); } break;
     case 'apologize': if(to){ c.flags.apologized=sp.id; delete sp.guilt[to.id]; dropIntention(sp,'apologize',to.id); feel(sp,{stress:-6}); relChange(to,sp.id,{resentment:-5},'apologized',false); } break;
